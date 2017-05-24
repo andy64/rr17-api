@@ -6,14 +6,14 @@ class SourceProvidersController < ApplicationController
   end
   # GET /source_providers
   def index
-    @source_providers = SourceProvider.all
+    @source_providers = SourceProvider.where active: true
 
     render json: @source_providers
   end
 
   # GET /source_providers/1
   def show
-    render json: @source_provider
+    render json: @source_provider.active ? @source_provider : 'no results'
   end
 
   # POST /source_providers

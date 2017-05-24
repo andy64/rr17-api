@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  usd: 9.99
+  eur: 9.99
+  rur: 9.99
+
+two:
+  usd: 9.99
+  eur: 9.99
+  rur: 9.99

@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522162129) do
+ActiveRecord::Schema.define(version: 20170524221130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "course_results", force: :cascade do |t|
+    t.decimal "usd", precision: 8, scale: 2
+    t.decimal "eur", precision: 8, scale: 2
+    t.decimal "rur", precision: 8, scale: 2
+    t.datetime "created_at", default: "2017-05-24 21:35:24"
+  end
 
   create_table "source_providers", force: :cascade do |t|
     t.string "name", null: false
@@ -22,8 +29,18 @@ ActiveRecord::Schema.define(version: 20170522162129) do
     t.datetime "last_sync_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true
     t.index ["name"], name: "index_source_providers_on_name"
     t.index ["url"], name: "index_source_providers_on_url"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
