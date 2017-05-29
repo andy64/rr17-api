@@ -5,7 +5,7 @@ class CreateCourseResults < ActiveRecord::Migration[5.1]
       t.decimal :eur, precision:8, scale: 2
       t.decimal :rur, precision:8, scale: 2
 
-      t.timestamp :created_at, default: Time.now
+      t.timestamp :created_at
     end
   end
 end

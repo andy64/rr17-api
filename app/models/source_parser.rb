@@ -1,0 +1,2 @@
+class SourceParser < ApplicationRecord
+end

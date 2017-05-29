@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524221130) do
+ActiveRecord::Schema.define(version: 20170529193414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,8 @@ ActiveRecord::Schema.define(version: 20170524221130) do
     t.decimal "usd", precision: 8, scale: 2
     t.decimal "eur", precision: 8, scale: 2
     t.decimal "rur", precision: 8, scale: 2
-    t.datetime "created_at", default: "2017-05-24 21:35:24"
+    t.datetime "created_at", default: "2017-05-25 06:56:51"
+    t.integer "source_provider_id"
   end
 
   create_table "source_providers", force: :cascade do |t|
@@ -30,6 +31,7 @@ ActiveRecord::Schema.define(version: 20170524221130) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true
+    t.integer "user_id"
     t.index ["name"], name: "index_source_providers_on_name"
     t.index ["url"], name: "index_source_providers_on_url"
   end
