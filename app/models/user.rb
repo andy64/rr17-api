@@ -38,6 +38,6 @@ class User < ApplicationRecord
   end
 
   def deactivate_source_providers
-    self.source_providers.each{|x| x.active=false}
+    self.source_providers.update_all(active:false, user_id:nil)
   end
 end

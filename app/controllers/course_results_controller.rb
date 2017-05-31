@@ -1,4 +1,4 @@
-class CourseResultsController < ApplicationController
+class CourseResultsController < ApiBaseController
  # before_action :set_course_result, only: [:show, :update, :destroy]
 
   # GET /course_results

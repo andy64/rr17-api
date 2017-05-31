@@ -1,9 +1,34 @@
-class SourceProvidersController < ApplicationController
+require 'parsers'
+
+class SourceProvidersController < ApiBaseController
   before_action :set_source_provider, only: [:show, :update, :destroy]
+  include ParserCurrency
 
   def noaction
-    render json: { provider: 'rr17-api', version: '1' }
+    render json: {provider: 'rr17-api', version: '1'}
   end
+
+  def parse_now
+    name = params[:provider_name]
+    class_var = name.capitalize+'Parser'
+    # class_var.constantize
+    parsed_response = nil
+    status = 201
+    begin
+      parsed_response = self.class.const_get(class_var).new.parse
+    rescue => e
+      status = 400
+      parsed_response = "{errors:[{parsed:false, message:#{e.message}}]}"
+    ensure
+      render json: parsed_response, status: status
+    end
+  end
+
+  def parse_all
+    raise "Not implemented yet!"
+
+  end
+
   # GET /source_providers
   def index
     @source_providers = SourceProvider.where active: true
@@ -23,7 +48,7 @@ class SourceProvidersController < ApplicationController
     if @source_provider.save
       render json: @source_provider, status: :created, location: @source_provider
     else
-      render json: @source_provider.errors, status: :unprocessable_entity
+      render_error @source_provider
     end
   end
 
@@ -32,7 +57,7 @@ class SourceProvidersController < ApplicationController
     if @source_provider.update(source_provider_params)
       render json: @source_provider
     else
-      render json: @source_provider.errors, status: :unprocessable_entity
+      render_error @source_provider
     end
   end
 
@@ -42,13 +67,13 @@ class SourceProvidersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_source_provider
-      @source_provider = SourceProvider.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_source_provider
+    @source_provider = SourceProvider.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def source_provider_params
-      params.require(:source_provider).permit(:name, :url, :address)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def source_provider_params
+    params.require(:source_provider).permit(:name, :url, :address)
+  end
 end

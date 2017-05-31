@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529193414) do
+ActiveRecord::Schema.define(version: 20170529232439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,13 @@ ActiveRecord::Schema.define(version: 20170529193414) do
     t.decimal "rur", precision: 8, scale: 2
     t.datetime "created_at", default: "2017-05-25 06:56:51"
     t.integer "source_provider_id"
+  end
+
+  create_table "source_parsers", force: :cascade do |t|
+    t.string "parser_name"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "source_providers", force: :cascade do |t|
