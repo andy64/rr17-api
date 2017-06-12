@@ -1,37 +1,39 @@
-require 'parsers'
 
-class SourceProvidersController < ApiBaseController
+# class V1::SourceProvidersController < V1::ApiBaseController
+class SourceProvidersController < ApplicationController
   before_action :set_source_provider, only: [:show, :update, :destroy]
-  include ParserCurrency
 
   def noaction
     render json: {provider: 'rr17-api', version: '1'}
   end
 
   def parse_now
-    name = params[:provider_name]
-    class_var = name.capitalize+'Parser'
-    # class_var.constantize
-    parsed_response = nil
-    status = 201
-    begin
-      parsed_response = self.class.const_get(class_var).new.parse
-    rescue => e
-      status = 400
-      parsed_response = "{errors:[{parsed:false, message:#{e.message}}]}"
-    ensure
-      render json: parsed_response, status: status
-    end
+    sp = SourceProvider.find_by(name: params[:provider_name][0..20])
+    raise 'Sourse parser not found' unless sp
+    status = 200
+    parsed_response = sp.do_parse
+  rescue => e
+    status = 400
+    parsed_response = "{errors:[{parsed:false, message:#{e.message}}], status: 400}"
+  ensure
+    render json: parsed_response, status: status
   end
 
   def parse_all
-    raise "Not implemented yet!"
-
+    parsed_response, status = "{scheduled:#{Time.now}, status: 203}", 203
+    SourceProvider.all.each do |sp|
+      sp.do_parse
+    end
+  rescue => e
+    status = 400
+    parsed_response = "{errors:[{parsed:false, message:#{e.message}}], status: 400}"
+  ensure
+    render json: parsed_response, status: status
   end
 
   # GET /source_providers
   def index
-    @source_providers = SourceProvider.where active: true
+    @source_providers = SourceProvider.all
 
     render json: @source_providers
   end
@@ -43,6 +45,7 @@ class SourceProvidersController < ApiBaseController
 
   # POST /source_providers
   def create
+    params[:user_id] = current_user[:id]
     @source_provider = SourceProvider.new(source_provider_params)
 
     if @source_provider.save
@@ -63,7 +66,12 @@ class SourceProvidersController < ApiBaseController
 
   # DELETE /source_providers/1
   def destroy
-    @source_provider.destroy
+    if @source_provider.destroyable_by?(current_user)
+      @source_provider.destroy
+    else
+      @source_provider.errors.add(:base, :not_destroyed, message: "Only author can delete sp")
+      render_error @source_provider
+    end
   end
 
   private
@@ -76,4 +84,8 @@ class SourceProvidersController < ApiBaseController
   def source_provider_params
     params.require(:source_provider).permit(:name, :url, :address)
   end
+
+
+
+
 end

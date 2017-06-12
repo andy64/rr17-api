@@ -5,16 +5,22 @@
 #
 SourceProvider.delete_all
 User.delete_all
-
+CourseResult.delete_all
+SourceParser.delete_all
+SourceParser.create!([
+    {parser_name: 'NbParser', url: 'https://www.nbrb.by'},
+    {parser_name: 'BsbParser', url: 'https://bsb.by'},
+    {parser_name: 'ParitetParser', url: 'http://www.paritetbank.by'}
+                     ])
 User.create!([
-                 {last_name: 'Mylast1', first_name: 'Andrei', email: 'wQe123@email.com' },
-                 {last_name: 'Mylast2', first_name: 'Vova', email: '1zxc@e2ail.COM' }
+                 {last_name: 'Mylast1', first_name: 'Andrei', email: 'admin@email.com', password: 'admin'  },
+                 {last_name: 'Mylast2', first_name: 'Andrei', email: 'admin2@email.com', password: 'admin2' },
              ])
 
 SourceProvider.create!([
-                           {name: 'SourcePr1', url: 'http://yandex.ru/', address: 'Moscow, AnonymStreet 23', user_id: User.all.first.id},
-                           {name: 'SourcePr2', url: 'http://google.com/', address: 'Minsk, AnonymStreet 25', user_id: User.all.first.id},
-                           {name: 'SourcePr3', url: 'http://bing.com/', address: 'Kiev, AnonymStreet 29', user_id: User.all.first.id}
+                           {name: 'SourcePr1', url: 'https://www.nbrb.by', address: 'Moscow, AnonymStreet 23', user_id: User.all.last.id},
+                           {name: 'SourcePr2', url: 'https://bsb.by', address: 'Minsk, AnonymStreet 25', user_id: User.all.last.id},
+                           {name: 'SourcePr3', url: 'http://www.paritetbank.by', address: 'Kiev, AnonymStreet 29', user_id: User.all.last.id}
                        ])
 
 CourseResult.create!([

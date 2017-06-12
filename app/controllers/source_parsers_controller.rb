@@ -1,4 +1,4 @@
-class SourceParsersController < ApiBaseController
+class V1::SourceParsersController < V1::ApiBaseController
   before_action :set_source_parser, only: [:show, :update, :destroy]
 
   # GET /source_parsers
@@ -46,6 +46,6 @@ class SourceParsersController < ApiBaseController
 
     # Only allow a trusted parameter "white list" through.
     def source_parser_params
-      params.fetch(:source_parser, {})
+      params.require(:source_parser).permit(:url, :parser_name)
     end
 end

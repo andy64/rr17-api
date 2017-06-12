@@ -1,38 +1,46 @@
 require 'test_helper'
 
+
 class SourceProvidersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @source_provider = source_providers(:one)
+    @user = users(:one)
+  end
+
+ test "should parse by post request for authenticated user" do
+    #post v1_auth_user_url, params: { email: @user.email, password: @user.password }, as: :json
+    post "/v1/source_provider/nb/start_now", params: {  }, as: :json
+    assert_response :success
   end
 
   test "should get index" do
-    get source_providers_url, as: :json
+    get v1_source_providers_url, as: :json
     assert_response :success
   end
 
-  test "should create source_provider" do
-    assert_difference('SourceProvider.count') do
-      post source_providers_url, params: { source_provider: { [name: @source_provider.[name, address: @source_provider.address, url: @source_provider.url } }, as: :json
+  test "should not create source_provider without authentification" do
+    assert_difference('SourceProvider.count', 0) do
+      post v1_source_providers_url, params: { source_provider: { name: @source_provider.name, address: @source_provider.address, url: @source_provider.url } }, as: :json
     end
 
-    assert_response 201
+    assert_response 401
   end
 
   test "should show source_provider" do
-    get source_provider_url(@source_provider), as: :json
+    get v1_source_provider_url(@source_provider), as: :json
     assert_response :success
   end
 
-  test "should update source_provider" do
-    patch source_provider_url(@source_provider), params: { source_provider: { [name: @source_provider.[name, address: @source_provider.address, url: @source_provider.url } }, as: :json
-    assert_response 200
+  test "should not update source_provider without authentification" do
+    patch v1_source_provider_url(@source_provider), params: { source_provider: { name: @source_provider.name, address: @source_provider.address, url: @source_provider.url } }, as: :json
+    assert_response 401
   end
 
-  test "should destroy source_provider" do
-    assert_difference('SourceProvider.count', -1) do
-      delete source_provider_url(@source_provider), as: :json
+  test "should not destroy source_provider without authentification" do
+    assert_difference('SourceProvider.count', 0) do
+      delete v1_source_provider_url(@source_provider), as: :json
     end
 
-    assert_response 204
+    assert_response 401
   end
 end

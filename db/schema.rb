@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529232439) do
+ActiveRecord::Schema.define(version: 20170611211231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "course_results", force: :cascade do |t|
-    t.decimal "usd", precision: 8, scale: 2
-    t.decimal "eur", precision: 8, scale: 2
-    t.decimal "rur", precision: 8, scale: 2
-    t.datetime "created_at", default: "2017-05-25 06:56:51"
+    t.decimal "usd", precision: 8, scale: 4
+    t.decimal "eur", precision: 8, scale: 4
+    t.decimal "rur", precision: 8, scale: 4
+    t.datetime "created_at"
     t.integer "source_provider_id"
   end
 
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20170529232439) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true
-    t.integer "user_id"
+    t.integer "user_id", null: false
     t.index ["name"], name: "index_source_providers_on_name"
     t.index ["url"], name: "index_source_providers_on_url"
   end
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20170529232439) do
     t.string "first_name"
     t.string "last_name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

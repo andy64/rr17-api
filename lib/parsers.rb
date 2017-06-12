@@ -2,50 +2,43 @@ require 'nokogiri'
 require 'net/http'
 require 'open-uri'
 
-
 module ParserCurrency
-
-
 
   class BaseParser
     def initialize(page_source)
       @html_doc = Nokogiri::HTML(page_source)
     end
     protected
-    def base_parse(eur_path, usd_path, rur_path)
-      eur = @html_doc.xpath(eur_path).text
-      usd = @html_doc.xpath(usd_path).text
-      rur = @html_doc.xpath(rur_path).text
-      {parsed: true, result:{usd: usd, eur: eur, rur: rur}}
+    def base_parse(path)
+      h = {usd: @html_doc.xpath(path.('USD')).text.gsub!(',','.'),
+           eur: @html_doc.xpath(path.('EUR')).text.gsub!(',','.'),
+           rur: @html_doc.xpath(path.('RUB')).text.gsub!(',','.')}
+      raise 'Cannot find currency on page' if h.values.include?("")
+      {parsed: true, result: h}
     rescue => e
+      Rails.logger.error e.message #check it's logging info
       {parsed: false, result: e.message}
     end
   end
 
-  class PriorParser < BaseParser
+  class ParitetParser < BaseParser
     def parse
-      path_build = lambda{|x| "//*[@id='currencyAjax']//td[text()='#{x}']/following::td"}
       #BaseParser.instance_method(:parse).bind(self).call(path_build.('EUR'), path_build.('USD'), path_build.('RUR'))
-      base_parse path_build.('EUR'), path_build.('USD'), path_build.('RUR')
+      base_parse lambda{|x| "//*[@id='lcol']//span[contains(text(),'#{x}')]/../../td[2]"}
     end
   end
 
-  class MTBParser < BaseParser
+  class BsbParser < BaseParser
     def parse
-      path_build = lambda{|x| "/html/body/div[1]/div/div[1]/div[2]/div[1]/div[4]/div[1]/table[1]/tbody/tr[2]/td[#{x}]"}
-      base_parse path_build.(2), path_build.(4), path_build.(5)
+      base_parse lambda{|x| "//span[text()='#{x}']/../../td[1]"}
     end
   end
 
-  class NBParser < BaseParser
+  class NbParser < BaseParser
     def parse
-      path_build = lambda{|x| "//*[@id='BodyHolder_tblRates']/tbody/tr[#{x}]/td[3]"}
-      base_parse path_build.(2), path_build.(3), path_build.(4)
+      base_parse lambda{|x| "//*[@id='BodyHolder_tblRates']//td[contains(text(),'#{x}')]/../td[3]"}
     end
 
   end
 
 end
-
-
-#p ParserCurrency::ProirParser.new(open('https://priorbank.by/', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE})).parse

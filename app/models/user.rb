@@ -1,6 +1,10 @@
 require 'faker/name'
 
 class User < ApplicationRecord
+
+  attr_reader :password
+
+  has_secure_password
   validates_format_of :email, with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates_uniqueness_of :email
   validates :password, :presence => true,
@@ -23,6 +27,12 @@ class User < ApplicationRecord
     "#{first_name last_name}"
   end
 
+  def valid_password?(param_pass)
+    param_pass && self.authenticate(param_pass)
+  rescue
+    nil
+  end
+
 
   protected
   def validate_usernames
@@ -38,6 +48,6 @@ class User < ApplicationRecord
   end
 
   def deactivate_source_providers
-    self.source_providers.update_all(active:false, user_id:nil)
+    self.source_providers.update_all(active: false, user_id: 0)
   end
 end

@@ -1,2 +1,3 @@
 class SourceParser < ApplicationRecord
+
 end
