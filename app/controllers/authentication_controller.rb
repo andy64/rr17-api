@@ -11,7 +11,11 @@ class AuthenticationController < ApplicationController
     end
   end
 
+  def authenticate_user_sinatra
+    
+  end
 
+  private
   def payload(user)
     return nil unless user
     {

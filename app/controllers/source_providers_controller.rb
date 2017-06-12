@@ -4,7 +4,8 @@ class SourceProvidersController < ApplicationController
   before_action :set_source_provider, only: [:show, :update, :destroy]
 
   def noaction
-    render json: {provider: 'rr17-api', version: '1'}
+    redirect_to 'http://localhost:4567/'
+
   end
 
   def parse_now
@@ -84,8 +85,5 @@ class SourceProvidersController < ApplicationController
   def source_provider_params
     params.require(:source_provider).permit(:name, :url, :address)
   end
-
-
-
 
 end

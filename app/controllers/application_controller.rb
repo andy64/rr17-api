@@ -1,18 +1,16 @@
 require 'jwt'
 
-
 class ApplicationController < ActionController::API
   include ControllerHelper
-
-
-  def render_error (inst_var) #check this is not an action!!!!
-    render json: format_error(inst_var.errors), status: 400, response_code: 400
-  end
 
   before_action :authenticate_request!, unless: -> { request.get? }, except: :authenticate_user
   attr_reader :current_user
 
   protected
+  def render_error (inst_var) #check this is not an action!!!!
+    render json: format_error(inst_var.errors), status: 400, response_code: 400
+  end
+
   def authenticate_request!
     unless user_id_in_token?
       render json: {errors: ['Not Authenticated']}, status: :unauthorized
