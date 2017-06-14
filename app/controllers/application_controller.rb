@@ -3,7 +3,7 @@ require 'jwt'
 class ApplicationController < ActionController::API
   include ControllerHelper
 
-  before_action :authenticate_request!, unless: -> { request.get? }, except: :authenticate_user
+  before_action :authenticate_request!, unless: -> { request.get? }, except: [:authenticate_user,:authenticate_user_sinatra]
   attr_reader :current_user
 
   protected

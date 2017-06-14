@@ -3,9 +3,9 @@ class V1::SourceProvidersController < ApiBaseController
 # class SourceProvidersController < ApplicationController
   before_action :set_source_provider, only: [:show, :update, :destroy]
 
-  def noaction
+  # def noaction
   #   is proceeding by sinatra on 4567 port
-  end
+  # end
 
   def parse_now
     sp = SourceProvider.find_by(name: params[:provider_name][0..20])

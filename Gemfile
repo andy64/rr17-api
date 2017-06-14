@@ -16,6 +16,8 @@ gem 'nokogiri'
 gem 'jwt'
 gem 'canable'
 gem 'sinatra'
+gem 'sinatra-sequel'
+gem 'sequel'
 gem "rack-reverse-proxy", require: "rack/reverse_proxy"
 #####################
 # Use postgresql as the database for Active Record
