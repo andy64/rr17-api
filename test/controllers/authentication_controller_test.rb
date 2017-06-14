@@ -6,12 +6,13 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should authenticate user" do
-    post v1_auth_user_url, params: { email: @user.email, password: @user.password }, as: :json
+    post v1_auth_user_path, params: { email: @user.email, password: 'admin' }, as: :json
     assert_response :success
+    assert response.body.include?('auth_token')
   end
 
-  test "should not authenticate user" do
-    post v1_auth_user_url, params: {  email: @user.email  }, as: :json
+  test "should not authenticate user without password" do
+    post v1_auth_user_path, params: {  email: @user.email  }, as: :json
     assert_response 401
   end
 

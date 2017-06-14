@@ -19,13 +19,22 @@ class SourceProvider < ApplicationRecord
     parser = sourse_parser
     parsed_response = self.class.const_get(parser.parser_name).new(open(parser.url)).parse
     pars = parsed_response[:result]
+    unless pars && !pars.empty?
+      errors.add 'Parsed response is empty'
+      logger.error(errors.as_json + pars)
+    end
     CourseResult.create!(eur: pars[:eur].to_d, usd: pars[:usd].to_d, rur: pars[:rur].to_d, source_provider_id: self[:id])
     parsed_response
   end
 
   private
   def sourse_parser
-    SourceParser.where(url: self.url).first
+    sp = SourceParser.where(url: self.url).first
+    unless sp
+      errors.add 'Parser is not found'
+      logger.error(errors.as_json + self.url)
+    end
+    sp
   end
 
 end

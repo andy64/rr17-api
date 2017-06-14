@@ -10,10 +10,10 @@ module ParserCurrency
     end
     protected
     def base_parse(path)
-      h = {usd: @html_doc.xpath(path.('USD')).text.gsub!(',','.'),
-           eur: @html_doc.xpath(path.('EUR')).text.gsub!(',','.'),
-           rur: @html_doc.xpath(path.('RUB')).text.gsub!(',','.')}
-      raise 'Cannot find currency on page' if h.values.include?("")
+      h = {usd: @html_doc.xpath(path.('USD')).text.gsub(',','.'),
+           eur: @html_doc.xpath(path.('EUR')).text.gsub(',','.'),
+           rur: @html_doc.xpath(path.('RUB')).text.gsub(',','.')}
+      raise 'Cannot find currency on page' if (h.values.include?("") || h.values.include?(nil) )
       {parsed: true, result: h}
     rescue => e
       Rails.logger.error e.message #check it's logging info

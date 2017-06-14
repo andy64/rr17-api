@@ -5,5 +5,10 @@ one:
   url: http://www.paritetbank.by
 
 two:
-  parser_name: NBParser
+  parser_name: NbParser
   url: https://www.nbrb.by
+
+three:
+  parser_name: BsbParser
+  url: https://bsb.by
+

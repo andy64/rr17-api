@@ -3,19 +3,11 @@ require 'bcrypt'
 
 class UsersControllerWithTokenTest < ActionDispatch::IntegrationTest
 
+
   setup do
     @user = users(:one)
-    pass = @user.password_digest
-    @user.password = BCrypt::Password.create(pass, cost: pass.size)
-    @user.save
-    uri = URI.parse('http://localhost:3000' + auth_user_path)
-    header = {'Content-Type': 'application/json'}
-    params = {email: @user.email, password: pass}
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Post.new(uri.request_uri, header)
-    request.body = params.to_json
-    response = http.request(request)
-    @token = JSON.parse(response.body)['auth_token']
+    post v1_auth_user_path, params: { email: @user.email, password: 'admin' }, as: :json
+    @token ||= JSON.parse(response.body)['auth_token']
   end
 
   test "can take up auth token for user" do
@@ -24,20 +16,21 @@ class UsersControllerWithTokenTest < ActionDispatch::IntegrationTest
 
 
   test "should create user with authentification" do
-    uri = URI.parse('http://localhost:3000' + users_path)
-    header = {'Content-Type': 'application/json', 'Authorization': @token}
-    params = {user: {email: 'test5@mail.com', first_name: @user.first_name, last_name: @user.last_name, password: 'test'}}
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Post.new(uri.request_uri, header)
-    request.body = params.to_json
-    response = http.request(request)
+    post v1_users_path,
+         params:{user: {email: 'test5@mail.com', first_name: @user.first_name, last_name: @user.last_name, password: 'test'}},
+         headers:{'Content-Type': 'application/json', 'Authorization': @token},
+         as: :json
+    @id = JSON.parse(response.body)['id']
     assert response.code=='201'
     assert response.message=='Created'
   end
 
-
-  # test "should destroy user with authentification" do
-    #assert_response 204
-  # end
+   test "shouldnot destroy last user with authentification" do
+     delete v1_user_path(1),
+          headers:{'Content-Type': 'application/json', 'Authorization': @token},
+          as: :json
+     assert response.code=='400'
+     assert response.body=="{errors:[{destroyed:false, message:cannot remove the last user}], status: 400}"
+   end
 
 end

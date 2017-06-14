@@ -5,13 +5,10 @@ class SourceProvidersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @source_provider = source_providers(:one)
     @user = users(:one)
+    post v1_auth_user_path, params: { email: @user.email, password: 'admin' }, as: :json
+    @token ||= JSON.parse(response.body)['auth_token']
   end
 
- test "should parse by post request for authenticated user" do
-    #post v1_auth_user_url, params: { email: @user.email, password: @user.password }, as: :json
-    post "/v1/source_provider/nb/start_now", params: {  }, as: :json
-    assert_response :success
-  end
 
   test "should get index" do
     get v1_source_providers_url, as: :json
@@ -22,8 +19,16 @@ class SourceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_difference('SourceProvider.count', 0) do
       post v1_source_providers_url, params: { source_provider: { name: @source_provider.name, address: @source_provider.address, url: @source_provider.url } }, as: :json
     end
-
     assert_response 401
+  end
+
+  test "should parse paritet bank" do
+    post v1_parser_path(@source_provider.name),
+         headers:{'Content-Type': 'application/json',
+                  'Authorization': @token},
+         as: :json
+    assert_response :success
+    JSON.parse(response.body)['result'].values.each{|val| assert(/\d\.\d{4}/.match?(val)) }
   end
 
   test "should show source_provider" do
@@ -40,7 +45,6 @@ class SourceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_difference('SourceProvider.count', 0) do
       delete v1_source_provider_url(@source_provider), as: :json
     end
-
     assert_response 401
   end
 end

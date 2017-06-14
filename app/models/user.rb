@@ -29,7 +29,8 @@ class User < ApplicationRecord
 
   def valid_password?(param_pass)
     param_pass && self.authenticate(param_pass)
-  rescue
+  rescue => e
+    logger.error "An error has occured #{e}"
     nil
   end
 

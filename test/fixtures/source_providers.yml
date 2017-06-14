@@ -1,13 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  url: MyString
+  name: SourcePr3
   address: Minsk, K3V
   user_id: 1
+  url: http://www.paritetbank.by
 
 two:
-  name: MyString
-  url: MyString
+  name: SourcePr2
   address: Minsk, R13
   user_id: 1
+  url: https://bsb.by
+
+three:
+  name: SourcePr1
+  address: Minsk, K3V
+  user_id: 1
+  url: https://www.nbrb.by

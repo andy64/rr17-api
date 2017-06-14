@@ -27,11 +27,11 @@ class SourceParsersControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
-  test "should destroy source_parser" do
-    assert_difference('SourceParser.count', 0) do
-      delete v1_source_parser_url(@source_parser), as: :json
-    end
-    assert_response 401
-  end
+  # test "should destroy source_parser" do
+  #   assert_difference('SourceParser.count', 0) do
+  #     delete v1_source_parser_url(@source_parser), as: :json
+  #   end
+  #   assert_response 401
+  # end
 
 end

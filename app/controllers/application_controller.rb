@@ -23,7 +23,7 @@ class ApplicationController < ActionController::API
     render json: {errors: [not_auth]}, status: :unauthorized
   rescue ActiveRecord::RecordNotFound
     not_found = 'User is not found. Try to get new token for existing user'
-    logger.error not_found
+    logger.error(not_found)
     render json: {errors: [not_found]}, status: 404
   end
 
