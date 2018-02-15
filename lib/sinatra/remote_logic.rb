@@ -1,10 +1,8 @@
-require 'sinatra'
 require 'json'
 require 'sequel'
 require 'bcrypt'
+require 'sinatra'
 require_relative '../../lib/json_web_token'
-
-
 
 get '/v1' do
   content_type :json

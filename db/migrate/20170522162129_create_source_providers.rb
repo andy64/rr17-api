@@ -6,7 +6,6 @@ class CreateSourceProviders < ActiveRecord::Migration[5.1]
       t.string :address, null: false
       t.timestamp :last_sync_at
       t.timestamps
-
     end
     add_index :source_providers, :name
     add_index :source_providers, :url

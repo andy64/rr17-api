@@ -13,4 +13,7 @@
 !/log/.keep
 !/tmp/.keep
 
+.vscode
+docker-compose.debug.yml
+.solargraph.yml
 .byebug_history

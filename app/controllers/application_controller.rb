@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
   attr_reader :current_user
 
   protected
-  def render_error (inst_var) #check this is not an action!!!!
+  def render_error(inst_var) #check this is not an action!!!!
     render json: format_error(inst_var.errors), status: 400, response_code: 400
   end
 
@@ -41,6 +41,4 @@ class ApplicationController < ActionController::API
   def user_id_in_token?
     http_token && auth_token && auth_token[:user_id].to_i
   end
-
-
 end

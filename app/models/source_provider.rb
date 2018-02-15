@@ -6,13 +6,13 @@ class SourceProvider < ApplicationRecord
 
   validates_uniqueness_of :name, :url
   validates_presence_of :name, :url, :address
-  belongs_to :author, class_name: "User", foreign_key: 'user_id'
+  belongs_to :author, class_name: 'User', foreign_key: 'user_id'
   has_many :course_results, dependent: :destroy
-  #scope :active, -> { where(active: true) }
+  # scope :active, -> { where(active: true) }
   default_scope { where(active: true) }
 
   def destroyable_by?(user)
-    user && self.author.id==user.id
+    user && self.author.id == user.id
   end
 
   def do_parse
@@ -28,6 +28,7 @@ class SourceProvider < ApplicationRecord
   end
 
   private
+
   def sourse_parser
     sp = SourceParser.where(url: self.url).first
     unless sp
@@ -36,5 +37,4 @@ class SourceProvider < ApplicationRecord
     end
     sp
   end
-
 end

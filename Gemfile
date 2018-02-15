@@ -22,6 +22,9 @@ gem "rack-reverse-proxy", require: "rack/reverse_proxy"
 #####################
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
+# gem 'mongo'
+gem 'mongoid'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -31,9 +34,11 @@ gem 'puma', '~> 3.7'
 
 # Use ActiveModel has_secure_password
 #gem install bcrypt -v '3.1.11' --platform=ruby for windows
-gem 'bcrypt', '3.1.11'
+gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
-
+gem 'delayed_job_active_record'
+gem 'delayed_job', '4.1.4'
+# gem 'bcrypt', '~> 3.1.7'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -48,8 +53,6 @@ group :development, :test do
 
 end
 
-group :development do
-end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
